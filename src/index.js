@@ -33,7 +33,8 @@ function onSubmit  (e) {
               getEl('.gallery').innerHTML = ''
               drawMarkup(data.hits) 
               addMarkup(cardMarkup)  
-              getEl('.load-more').classList.add('active')                    
+              showBtn(data)
+                                 
           }})
           .catch(onError)         
           
@@ -44,11 +45,8 @@ function onMore() {
         newApi.fetchArticles()
           .then(data => 
             drawMarkup(data.hits),
-            addMarkup(cardMarkup),
-                        
-           )  
-    
-            
+            addMarkup(cardMarkup),                        
+          )              
 }    
 
 function onError(err) {   
@@ -79,20 +77,20 @@ function drawMarkup(arr) {
           </p>
         </div>
       </div>`
-        }).join('')
-      
-        
-      //   if(data.totalHits < page * 40) {
-      //     Notify.failure("We're sorry, but you've reached the end of search results.")
-      //     getEl('load-more').classList.remove('active')
-      // } 
-      
-        
+        }).join('')        
 }    
 
 function addMarkup(markup) {
     getEl('.gallery').insertAdjacentHTML('beforeend', markup)
 }
 
+function showBtn(params) {
+  if (params.totalHits > 40 * newApi.showPage()) {
+    getEl('.load-more').classList.add('active') 
+  } else {
+    Notify.failure("We're sorry, but you've reached the end of search results.")
+           getEl('load-more').classList.remove('active')
+  }
+}
 
 

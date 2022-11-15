@@ -22,6 +22,10 @@ export default class NewApi {
              
     }
 
+    showPage() {
+        return this.page
+    }
+
     resetPage() {
         this.page = 1;
     }
