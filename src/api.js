@@ -18,8 +18,7 @@ export default class NewApi {
         const data = await response.json()
         this.page += 1
         return data
-                
-             
+                       
     }
 
     showPage() {

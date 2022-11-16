@@ -12,7 +12,7 @@ getEl('.load-more').addEventListener('click', onMore)
 let cardMarkup = ''
 const newApi = new NewApi()
 const modalWindow = new SimpleLightbox('.gallery a');
-modalWindow.on('show.simplelightbox', function () {});
+//modalWindow.on('show.simplelightbox', function () {});
 
 
 function onSubmit  (e) {
@@ -25,7 +25,7 @@ function onSubmit  (e) {
         }
 
         newApi.fetchArticles()
-          .then(data =>{ if (data.hits.length === 0) {
+          .then(data => { if (data.hits.length === 0) {
             throw new Error() 
           } else {
              
@@ -43,14 +43,14 @@ function onSubmit  (e) {
 
 function onMore() {
         newApi.fetchArticles()
-          .then(data => 
+          .then(data => {
             drawMarkup(data.hits),
-            addMarkup(cardMarkup),                        
-          )              
+            addMarkup(cardMarkup),
+            showBtn(data)                                              
+           } )              
 }    
 
-function onError(err) {   
-           console.log(err)  
+function onError() {           
         Notify.failure("Sorry, there are no images matching your search query. Please try again.")
     }
        
@@ -85,12 +85,18 @@ function addMarkup(markup) {
 }
 
 function showBtn(params) {
-  if (params.totalHits > 40 * newApi.showPage()) {
+  if (params.totalHits > 40 * (newApi.showPage() - 1)) {
     getEl('.load-more').classList.add('active') 
+   
   } else {
     Notify.failure("We're sorry, but you've reached the end of search results.")
-           getEl('load-more').classList.remove('active')
+           getEl('.load-more').classList.remove('active')
   }
 }
 
-
+window.addEventListener('scroll', () =>{
+  const {scrollHeight, scrollTop, clientHeight} = document.documentElement;  
+  if(scrollTop === scrollHeight - clientHeight){     
+      onMore()        
+  }
+})
